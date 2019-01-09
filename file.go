@@ -6,9 +6,9 @@ import (
 
 	"github.com/amsokol/go-errors"
 
-	"github.com/amsokol/go-eccodes/debug"
-	cio "github.com/amsokol/go-eccodes/io"
-	"github.com/amsokol/go-eccodes/native"
+	"github.com/mtfelian/go-eccodes/debug"
+	cio "github.com/mtfelian/go-eccodes/io"
+	"github.com/mtfelian/go-eccodes/native"
 )
 
 type Reader interface {
