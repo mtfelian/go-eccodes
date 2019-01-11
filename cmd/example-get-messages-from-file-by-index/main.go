@@ -20,7 +20,7 @@ func main() {
 
 	// set filter: get 'tp' variable messages
 	filter := map[string]interface{}{
-		"shortNameECMF": "tp",
+		"shortNameECMF": "2t",
 	}
 
 	file, err := codes.OpenFileByPathWithFilter(*filename, filter)
@@ -74,7 +74,7 @@ func process(file codes.File, n int) error {
 
 	forecastTime, err := msg.GetString("forecastTime")
 	if err != nil {
-		return errors.Wrap(err, "failed to get 'forecastTime' value")
+		log.Printf("failed to get 'forecastTime' value: %v", err)
 	}
 	log.Printf("forecastTime = %s\n", forecastTime)
 
@@ -117,9 +117,7 @@ func process(file codes.File, n int) error {
 		ptr = (*float64)(unsafe.Pointer(uptr))
 		val = *ptr
 
-		if i < 6 {
-			log.Printf("[%fx%f]=%f", lat, lon, val)
-		}
+		log.Printf("%06d: [%fx%f]=%f", i, lat, lon, val)
 	}
 
 	log.Printf("elapsed=%.0f ms", time.Since(start).Seconds()*1000)

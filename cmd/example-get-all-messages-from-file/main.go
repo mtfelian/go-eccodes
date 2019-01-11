@@ -62,14 +62,20 @@ func process(file codes.File, n int) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to get 'name' value")
 	}
+	forecastTime, err := msg.GetString("forecastTime")
+	if err != nil {
+		log.Printf("failed to get 'forecastTime' value: %v\n", err)
+	}
 
-	log.Printf("Variable = [%s](%s)\n", shortName, name)
+	log.Printf("Variable = [%s](%s), forecastTime=%s\n", shortName, name, forecastTime)
 
 	// just to measure timing
-	_, _, _, err = msg.Data()
+	lat, lon, values, err := msg.Data()
 	if err != nil {
 		return errors.Wrap(err, "failed to get data (latitudes, longitudes, values)")
 	}
+
+	log.Printf("Lengths of slices: %d %d %d\n", len(lat), len(lon), len(values))
 
 	log.Printf("elapsed=%.0f ms", time.Since(start).Seconds()*1000)
 	log.Printf("============= END MESSAGE N%d ============\n\n", n)
