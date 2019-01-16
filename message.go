@@ -1,6 +1,7 @@
 package codes
 
 import (
+	"fmt"
 	"math"
 	"runtime"
 
@@ -23,6 +24,7 @@ type Message interface {
 	DataUnsafe() (latitudes *Float64ArrayUnsafe, longitudes *Float64ArrayUnsafe, values *Float64ArrayUnsafe, err error)
 
 	Close() error
+	Handle() native.Ccodes_handle
 }
 
 type message struct {
@@ -78,6 +80,14 @@ func (m *message) DataUnsafe() (latitudes *Float64ArrayUnsafe, longitudes *Float
 func (m *message) Close() error {
 	defer func() { m.handle = nil }()
 	return native.Ccodes_handle_delete(m.handle)
+}
+
+func (m *message) String() string {
+	return fmt.Sprintf(`{"message": %d}`, m.handle)
+}
+
+func (m *message) Handle() native.Ccodes_handle {
+	return m.handle
 }
 
 func messageFinalizer(m *message) {

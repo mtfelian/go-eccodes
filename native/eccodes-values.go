@@ -155,3 +155,32 @@ func Ccodes_grib_get_data_unsafe(handle Ccodes_handle) (latitudes unsafe.Pointer
 
 	return latitudes, longitudes, values, nil
 }
+
+func Ccodes_get_size(handle Ccodes_handle, key string) (int64, error) {
+	cKey := C.CString(key)
+	defer C.free(unsafe.Pointer(cKey))
+
+	var value CsizeT
+	err := C.codes_get_size((*C.codes_handle)(handle), cKey, (*C.size_t)(unsafe.Pointer(&value)))
+	if err != 0 {
+		return 0, errors.New(Cgrib_get_error_message(int(err)))
+	}
+	return int64(value), nil
+}
+
+func Ccodes_get_long_array(handle Ccodes_handle, key string) ([]int64, error) {
+	size, err := Ccodes_get_size(handle, key)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to get size of %s", key)
+	}
+	cKey := C.CString(key)
+	defer C.free(unsafe.Pointer(cKey))
+	values := make([]int64, size)
+	cValues := (*C.long)(unsafe.Pointer(&values[0]))
+
+	res := C.codes_get_long_array((*C.codes_handle)(handle), cKey, cValues, (*C.size_t)(unsafe.Pointer(&size)))
+	if res != 0 {
+		return nil, errors.New(Cgrib_get_error_message(int(res)))
+	}
+	return values, nil
+}
