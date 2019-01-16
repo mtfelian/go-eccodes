@@ -56,16 +56,22 @@ func process(file codes.File, n int) error {
 	if err := printField(msg, "typicalDate", "l"); err != nil {
 		return err
 	}
-	if err := printField(msg, "stationNumber", "l"); err != nil {
-		return err
-	}
-	if err := printField(msg, "airTemperatureAt2M", "d"); err != nil {
-		return err
-	}
-	arr, err := native.Ccodes_get_long_array(msg.Handle(), "bufrdcExpandedDescriptors")
+	// if err := printField(msg, "stationNumber", "l"); err != nil {
+	// 	return err
+	// }
+	// if err := printField(msg, "airTemperatureAt2M", "d"); err != nil {
+	// 	return err
+	// }
+	descriptors, err := native.Ccodes_get_long_array(msg.Handle(), "bufrdcExpandedDescriptors")
 	if err != nil {
 		return err
 	}
+	fmt.Println("descriptors:", descriptors)
+	values, err := native.Ccodes_get_double_array(msg.Handle(), "numericValues")
+	if err != nil {
+		return err
+	}
+	fmt.Println("values:", values)
 
 	return nil
 }

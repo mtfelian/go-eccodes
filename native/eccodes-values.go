@@ -184,3 +184,20 @@ func Ccodes_get_long_array(handle Ccodes_handle, key string) ([]int64, error) {
 	}
 	return values, nil
 }
+
+func Ccodes_get_double_array(handle Ccodes_handle, key string) ([]float64, error) {
+	size, err := Ccodes_get_size(handle, key)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to get size of %s", key)
+	}
+	cKey := C.CString(key)
+	defer C.free(unsafe.Pointer(cKey))
+	values := make([]float64, size)
+	cValues := (*C.double)(unsafe.Pointer(&values[0]))
+
+	res := C.codes_get_double_array((*C.codes_handle)(handle), cKey, cValues, (*C.size_t)(unsafe.Pointer(&size)))
+	if res != 0 {
+		return nil, errors.New(Cgrib_get_error_message(int(res)))
+	}
+	return values, nil
+}
