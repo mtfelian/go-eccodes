@@ -72,6 +72,12 @@ func process(file codes.File, n int) error {
 	for native.Ccodes_bufr_keys_iterator_next(iter) {
 		name := native.Ccodes_bufr_keys_iterator_get_name(iter)
 		printField(msg, name, "s")
+		fmt.Printf("  ")
+		printField(msg, name+"->units", "s")
+		fmt.Printf("  ")
+		printField(msg, name+"->code", "s")
+		fmt.Printf("  ")
+		printField(msg, name+"->width", "s")
 	}
 	fmt.Println("<<<<<<<<<<<<<<<<<<:::::::>>>>>>>>>>>>>>>>>>>")
 	return nil
