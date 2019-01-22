@@ -14,10 +14,10 @@ type Element struct {
 	Unit string
 }
 
-// BufrCodes ...
-type BufrCodes struct {
-	msg   codes.Message
-	items []Element
+// Codes ...
+type Codes struct {
+	Msg   codes.Message
+	Items []Element
 }
 
 func newElementFromIter(msg codes.Message, iter native.Ccodes_keys_iterator) (*Element, error) {
@@ -41,8 +41,8 @@ func newElementFromIter(msg codes.Message, iter native.Ccodes_keys_iterator) (*E
 	return el, nil
 }
 
-// NewBufrCodes ...
-func NewBufrCodes(msg codes.Message) (*BufrCodes, error) {
+// NewCodes ...
+func NewCodes(msg codes.Message) (*Codes, error) {
 	if msg == nil {
 		return nil, errors.New("nil msg")
 	}
@@ -52,7 +52,7 @@ func NewBufrCodes(msg codes.Message) (*BufrCodes, error) {
 	}
 	defer native.Ccodes_bufr_keys_iterator_delete(iter)
 
-	bufr := new(BufrCodes)
+	bufr := new(Codes)
 
 	for native.Ccodes_bufr_keys_iterator_next(iter) {
 		if el, err := newElementFromIter(msg, iter); err == nil {
@@ -61,9 +61,3 @@ func NewBufrCodes(msg codes.Message) (*BufrCodes, error) {
 	}
 	return bufr, nil
 }
-
-// items ...
-func (bufr *BufrCodes) Items() []Elements { return bufr.items }
-
-// Message ...
-func (bufr *BufrCodes) Message() codes.Message { return bufr.msg }
