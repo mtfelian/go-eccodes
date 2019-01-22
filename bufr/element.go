@@ -56,7 +56,7 @@ func NewCodes(msg codes.Message) (*Codes, error) {
 
 	for native.Ccodes_bufr_keys_iterator_next(iter) {
 		if el, err := newElementFromIter(msg, iter); err == nil {
-			bufr.items = append(bufr.items, *el)
+			bufr.items = append(bufr.Items, *el)
 		}
 	}
 	return bufr, nil
