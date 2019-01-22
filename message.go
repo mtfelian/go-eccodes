@@ -22,6 +22,8 @@ type Message interface {
 	Data() (latitudes []float64, longitudes []float64, values []float64, err error)
 	DataUnsafe() (latitudes *Float64ArrayUnsafe, longitudes *Float64ArrayUnsafe, values *Float64ArrayUnsafe, err error)
 
+	Keys() []string
+
 	Close() error
 }
 
@@ -73,6 +75,16 @@ func (m *message) DataUnsafe() (latitudes *Float64ArrayUnsafe, longitudes *Float
 		return nil, nil, nil, err
 	}
 	return newFloat64ArrayUnsafe(lats), newFloat64ArrayUnsafe(lons), newFloat64ArrayUnsafe(vals), nil
+}
+
+func (m *message) Keys() []string {
+	iter := native.Ccodes_keys_iterator_new(m.handle, native.CODES_KEYS_ITERATOR_ALL_KEYS, "")
+	defer native.Ccodes_keys_iterator_delete(iter)
+	result := make([]string, 0)
+	for native.Ccodes_keys_iterator_next(iter) == 1 {
+		result = append(result, native.Ccodes_keys_iterator_get_name(iter))
+	}
+	return result
 }
 
 func (m *message) Close() error {
