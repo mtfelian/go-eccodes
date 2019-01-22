@@ -43,20 +43,20 @@ func newElementFromIter(msg codes.Message, iter native.Ccodes_keys_iterator) (*E
 
 // NewBufrCodes ...
 func NewBufrCodes(msg codes.Message) (*BufrCodes, error) {
-	if iter == nil {
+	if msg == nil {
 		return nil, errors.New("nil msg")
 	}
 	iter := native.Ccodes_bufr_keys_iterator_new(msg.Handle(), 0)
 	if iter == nil {
 		return nil, errors.New("iter is null")
 	}
-	defer native.Ccodes_bufr_keys_iterator_delete(msg)
+	defer native.Ccodes_bufr_keys_iterator_delete(iter)
 
 	bufr := new(BufrCodes)
 
-	for native.Ccodes_bufr_keys_iterator_next(msg) {
+	for native.Ccodes_bufr_keys_iterator_next(iter) {
 		if el, err := newElementFromIter(msg, iter); err == nil {
-			bufr.items = append(bufr.items, el)
+			bufr.items = append(bufr.items, *el)
 		}
 	}
 	return bufr, nil

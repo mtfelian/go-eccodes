@@ -48,7 +48,9 @@ func process(file codes.File, n int) error {
 	if err := msg.SetLong("unpack", 1); err != nil {
 		return errors.Wrap(err, "unpack")
 	}
-	printHeader(msg)
+
+	header := bufr.NewHeader(msg)
+	fmt.Printf("%+v\n", header)
 
 	descriptors, err := native.Ccodes_get_long_array(msg.Handle(), "bufrdcExpandedDescriptors")
 	if err != nil {
@@ -91,19 +93,4 @@ func printField(msg codes.Message, name, typ string) error {
 	}
 	fmt.Printf("%s: %v\n", name, v)
 	return nil
-}
-
-func printHeader(msg codes.Message) {
-	printField(msg, "edition", "l")
-	printField(msg, "masterTableNumber", "l")
-	printField(msg, "dataCategory", "l")
-	printField(msg, "dataSubCategory", "l")
-	printField(msg, "typicalDate", "l")
-	printField(msg, "typicalTime", "l")
-	printField(msg, "bufrHeaderCentre", "l")
-	printField(msg, "bufrHeaderSubCentre", "l")
-	printField(msg, "masterTablesVersionNumber", "l")
-	printField(msg, "localTablesVersionNumber", "l")
-	printField(msg, "numberOfSubsets", "l")
-
 }
