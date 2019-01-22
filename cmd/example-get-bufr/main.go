@@ -5,16 +5,16 @@ import (
 	"io"
 	"log"
 
-	"github.com/mtfelian/go-eccodes/native"
-
 	"github.com/amsokol/go-errors"
 	codes "github.com/mtfelian/go-eccodes"
+	"github.com/mtfelian/go-eccodes/bufr"
 	cio "github.com/mtfelian/go-eccodes/io"
+	"github.com/mtfelian/go-eccodes/native"
 )
 
 func main() {
 	fmt.Println("Start")
-	f, err := cio.OpenFile("JUBE99 EGRR 301200", "r")
+	f, err := cio.OpenFile("JUVE00 EGRR 161200", "r") // "JUBE99 EGRR 301200"
 	if err != nil {
 		panic(err)
 	}
@@ -56,6 +56,7 @@ func process(file codes.File, n int) error {
 	}
 	fmt.Println("---------------------------------------------")
 	fmt.Println("descriptors:", descriptors)
+
 	values, err := native.Ccodes_get_double_array(msg.Handle(), "numericValues")
 	if err != nil {
 		return err
@@ -64,22 +65,13 @@ func process(file codes.File, n int) error {
 	fmt.Println("values:", values)
 	fmt.Println("---------------------------------------------")
 
-	iter := native.Ccodes_bufr_keys_iterator_new(msg.Handle(), 0)
-	if iter == nil {
-		return errors.New("iter is null")
+	bufrCodes, err := bufr.NewBufrCodes(msg)
+	if err != nil {
+		return err
 	}
-	defer native.Ccodes_bufr_keys_iterator_delete(iter)
-	for native.Ccodes_bufr_keys_iterator_next(iter) {
-		name := native.Ccodes_bufr_keys_iterator_get_name(iter)
-		printField(msg, name, "s")
-		fmt.Printf("  ")
-		printField(msg, name+"->units", "s")
-		fmt.Printf("  ")
-		printField(msg, name+"->code", "s")
-		fmt.Printf("  ")
-		printField(msg, name+"->width", "s")
-	}
+	fmt.Println(bufrCodes)
 	fmt.Println("<<<<<<<<<<<<<<<<<<:::::::>>>>>>>>>>>>>>>>>>>")
+
 	return nil
 }
 
