@@ -61,3 +61,9 @@ func NewBufrCodes(msg codes.Message) (*BufrCodes, error) {
 	}
 	return bufr, nil
 }
+
+// items ...
+func (bufr *BufrCodes) Items() []Elements { return bufr.items }
+
+// Message ...
+func (bufr *BufrCodes) Message() codes.Message { return bufr.msg }
