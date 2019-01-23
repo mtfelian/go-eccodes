@@ -15,6 +15,21 @@ import (
 const MaxStringLength = 1030
 const ParameterNumberOfPoints = "numberOfDataPoints"
 
+func Ccodes_get_native_type(handle Ccodes_handle, key string) (int, error) {
+	//int codes_get_native_type(codes_handle* h, const char* name,int* type);
+	cKey := C.CString(key)
+	defer C.free(unsafe.Pointer(cKey))
+
+	var value Cint
+	cValue := (*C.int)(unsafe.Pointer(&value))
+
+	err := C.codes_get_native_type((*C.codes_handle)(handle), cKey, cValue)
+	if err != 0 {
+		return 0, errors.New(Cgrib_get_error_message(int(err)))
+	}
+	return int(value), nil
+}
+
 func Ccodes_get_long(handle Ccodes_handle, key string) (int64, error) {
 	cKey := C.CString(key)
 	defer C.free(unsafe.Pointer(cKey))
@@ -85,8 +100,8 @@ func Ccodes_get_string(handle Ccodes_handle, key string) (string, error) {
 	var result []byte
 
 	if length > MaxStringLength {
-		debug.MemoryLeakLogger.Printf("unnecessary memory allocation - length of '%s' value is %d greater than MaxStringLength=%d",
-			key, int(length), MaxStringLength)
+		debug.MemoryLeakLogger.Printf("unnecessary memory allocation - length of '%s' value is %d greater than "+
+			"MaxStringLength=%d", key, int(length), MaxStringLength)
 		result = make([]byte, length)
 	} else {
 		var buffer [MaxStringLength]byte

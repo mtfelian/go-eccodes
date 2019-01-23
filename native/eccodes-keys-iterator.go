@@ -10,6 +10,18 @@ import (
 	"github.com/amsokol/go-errors"
 )
 
+const (
+	CODES_KEYS_ITERATOR_ALL_KEYS              = 0
+	CODES_KEYS_ITERATOR_SKIP_READ_ONLY        = 1 << 0
+	CODES_KEYS_ITERATOR_SKIP_OPTIONAL         = 1 << 1
+	CODES_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC = 1 << 2
+	CODES_KEYS_ITERATOR_SKIP_CODED            = 1 << 3
+	CODES_KEYS_ITERATOR_SKIP_COMPUTED         = 1 << 4
+	CODES_KEYS_ITERATOR_SKIP_DUPLICATES       = 1 << 5
+	CODES_KEYS_ITERATOR_SKIP_FUNCTION         = 1 << 6
+	CODES_KEYS_ITERATOR_DUMP_ONLY             = 1 << 7
+)
+
 func Ccodes_keys_iterator_new(handle Ccodes_handle, flags int, namespace string) Ccodes_keys_iterator {
 	var cNamespace *C.char
 
@@ -18,7 +30,7 @@ func Ccodes_keys_iterator_new(handle Ccodes_handle, flags int, namespace string)
 		defer C.free(unsafe.Pointer(cNamespace))
 	}
 
-	return unsafe.Pointer(C.codes_keys_iterator_new((*C.codes_handle)(handle), C.ulong(Culong(flags)), nil))
+	return unsafe.Pointer(C.codes_keys_iterator_new((*C.codes_handle)(handle), C.ulong(Culong(flags)), cNamespace))
 }
 
 func Ccodes_keys_iterator_next(kiter Ccodes_keys_iterator) int {
