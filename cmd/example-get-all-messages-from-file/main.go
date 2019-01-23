@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/amsokol/go-errors"
+	"github.com/mtfelian/go-eccodes/native"
 
 	"github.com/mtfelian/go-eccodes"
 	cio "github.com/mtfelian/go-eccodes/io"
@@ -24,7 +25,7 @@ func main() {
 	}
 	defer f.Close()
 
-	file, err := codes.OpenFile(f)
+	file, err := codes.OpenFile(f, native.ProductAny)
 	if err != nil {
 		log.Fatalf("failed to open file: %s", err.Error())
 	}

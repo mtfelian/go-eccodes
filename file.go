@@ -25,7 +25,8 @@ type File interface {
 }
 
 type file struct {
-	file cio.File
+	file        cio.File
+	productKind int
 }
 
 type fileIndexed struct {
@@ -34,8 +35,8 @@ type fileIndexed struct {
 
 var emptyFilter = map[string]interface{}{}
 
-func OpenFile(f cio.File) (File, error) {
-	return &file{file: f}, nil
+func OpenFile(f cio.File, productKind int) (File, error) {
+	return &file{file: f, productKind: productKind}, nil
 }
 
 func OpenFileByPathWithFilter(path string, filter map[string]interface{}) (File, error) {
@@ -110,7 +111,7 @@ func OpenFileByPathWithFilter(path string, filter map[string]interface{}) (File,
 }
 
 func (f *file) Next() (Message, error) {
-	handle, err := native.Ccodes_handle_new_from_file(native.DefaultContext, f.file.Native(), native.ProductAny)
+	handle, err := native.Ccodes_handle_new_from_file(native.DefaultContext, f.file.Native(), f.productKind)
 	if err != nil {
 		if err == io.EOF {
 			return nil, err
