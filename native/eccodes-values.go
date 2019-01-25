@@ -16,7 +16,6 @@ const MaxStringLength = 1030
 const ParameterNumberOfPoints = "numberOfDataPoints"
 
 func Ccodes_get_native_type(handle Ccodes_handle, key string) (int, error) {
-	//int codes_get_native_type(codes_handle* h, const char* name,int* type);
 	cKey := C.CString(key)
 	defer C.free(unsafe.Pointer(cKey))
 

@@ -26,6 +26,17 @@ func Ccodes_handle_new_from_index(index Ccodes_index) (Ccodes_handle, error) {
 	return unsafe.Pointer(h), nil
 }
 
+func Ccodes_count_in_file(ctx Ccodes_context, file CFILE) (int, error) {
+	var value Cint
+	cValue := (*C.int)(unsafe.Pointer(&value))
+
+	err := C.codes_count_in_file((*C.codes_context)(ctx), (*C.FILE)(file), cValue)
+	if err != 0 {
+		return 0, errors.New(Cgrib_get_error_message(int(err)))
+	}
+	return int(value), nil
+}
+
 func Ccodes_handle_new_from_file(ctx Ccodes_context, file CFILE, product int) (Ccodes_handle, error) {
 	var cProduct C.int
 

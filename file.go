@@ -11,16 +11,16 @@ import (
 	"github.com/mtfelian/go-eccodes/native"
 )
 
-type Reader interface {
-	Next() (Message, error)
-}
+type Reader interface{ Next() (Message, error) }
 
-type Writer interface {
-}
+type Writer interface{}
+
+type Counter interface{ Count() (int, error) }
 
 type File interface {
 	Reader
 	Writer
+	Counter
 	Close()
 }
 
@@ -122,6 +122,10 @@ func (f *file) Next() (Message, error) {
 	return newMessage(handle), nil
 }
 
+func (f *file) Count() (int, error) {
+	return native.Ccodes_count_in_file(native.DefaultContext, f.file.Native())
+}
+
 func (f *file) Close() {
 	f.file = nil
 }
@@ -141,6 +145,8 @@ func (f *fileIndexed) Next() (Message, error) {
 
 	return newMessage(handle), nil
 }
+
+func (f *fileIndexed) Count() (int, error) { return 0, ErrNotImplemented }
 
 func (f *fileIndexed) Close() {
 	if f.isOpen() {
