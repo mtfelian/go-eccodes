@@ -30,13 +30,9 @@ func OpenFile(path string, mode string) (File, error) {
 	return f, nil
 }
 
-func (f *file) isOpen() bool {
-	return f.file != nil
-}
+func (f *file) isOpen() bool { return f.file != nil }
 
-func (f *file) Native() native.CFILE {
-	return f.file
-}
+func (f *file) Native() native.CFILE { return f.file }
 
 func (f *file) Close() error {
 	defer func() { f.file = nil }()
