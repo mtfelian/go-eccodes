@@ -143,7 +143,7 @@ source: [libeccodes](https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home)
 
 ```bash
 cd ./contrib
-tar -xzf eccodes-2.5.0-Source.tar.gz
+tar -xzf eccodes-2.12.0-Source.tar.gz
 mkdir build
 cd build
 cmake -DBUILD_SHARED_LIBS=OFF \ 
@@ -156,13 +156,13 @@ cmake -DBUILD_SHARED_LIBS=OFF \
     -DENABLE_MEMFS=ON \ 
     -DENABLE_ECCODES_THREADS=OFF \ 
     -DENABLE_ECCODES_OMP_THREADS=ON \
-    -DENABLE_EXTRA_TESTS=ON ..
+    -DENABLE_EXTRA_TESTS=OFF ..
 make
 ctest
 sudo make install
 cd ..
 rm -r ./build
-rm -r ./eccodes-2.5.0-Source
+rm -r ./eccodes-2.12.0-Source
 cd ..
 ```
 
