@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 
 	"github.com/amsokol/go-errors"
 	codes "github.com/mtfelian/go-eccodes"
@@ -14,7 +15,13 @@ import (
 
 func main() {
 	fmt.Println("Start")
-	f, err := cio.OpenFile("JUVE00 EGRR 161200", "r") // "JUBE99 EGRR 301200"
+
+	if len(os.Args) < 2 {
+		fmt.Println("Should specify filename param")
+		return
+	}
+
+	f, err := cio.OpenFile(os.Args[1], "r") // "JUBE99 EGRR 301200"
 	if err != nil {
 		panic(err)
 	}
@@ -67,7 +74,7 @@ func process(file codes.File, n int) error {
 	fmt.Println("values:", values)
 	fmt.Println("---------------------------------------------")
 
-	bufrCodes, err := bufr.NewBufrCodes(msg)
+	bufrCodes, err := bufr.NewCodes(msg)
 	if err != nil {
 		return err
 	}
