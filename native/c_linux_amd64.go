@@ -3,7 +3,7 @@
 package native
 
 /*
-#cgo LDFLAGS: -leccodes -leccodes_memfs -lpng -laec -ljasper -lopenjp2 -lpthread -fopenmp -lz -lm
+#cgo LDFLAGS: -leccodes -lpng -laec -lpthread -fopenmp -lz -lm -lopenjp2
 */
 import "C"
 
